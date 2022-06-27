@@ -665,7 +665,7 @@ func (f *FlagSet) FlagUsagesWrapped(cols int) string {
 			return
 		}
 
-		line := ""
+		var line string
 		if flag.Shorthand != "" && flag.ShorthandDeprecated == "" {
 			line = fmt.Sprintf("  -%s", flag.Shorthand)
 			if !flag.ShorthandOnly {
