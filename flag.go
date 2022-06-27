@@ -4,7 +4,6 @@
 package pflag
 
 import (
-	"bytes"
 	"errors"
 	goflag "flag"
 	"fmt"
@@ -654,7 +653,7 @@ func wrap(i, w int, s string) string {
 // for all flags in the FlagSet. Wrapped to `cols` columns (0 for no
 // wrapping)
 func (f *FlagSet) FlagUsagesWrapped(cols int) string {
-	buf := new(bytes.Buffer)
+	buf := new(strings.Builder)
 
 	lines := make([]string, 0, len(f.formal))
 

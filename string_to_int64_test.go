@@ -4,9 +4,9 @@
 package pflag
 
 import (
-	"bytes"
 	"fmt"
 	"strconv"
+	"strings"
 	"testing"
 )
 
@@ -23,7 +23,7 @@ func setUpS2I64FlagSetWithDefault(s2ip *map[string]int64) *FlagSet {
 }
 
 func createS2I64Flag(vals map[string]int64) string {
-	var buf bytes.Buffer
+	var buf strings.Builder
 	i := 0
 	for k, v := range vals {
 		if i > 0 {

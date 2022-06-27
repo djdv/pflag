@@ -4,7 +4,6 @@
 package pflag
 
 import (
-	"bytes"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -899,7 +898,7 @@ func TestUserDefined(t *testing.T) {
 
 func TestSetOutput(t *testing.T) {
 	var flags FlagSet
-	var buf bytes.Buffer
+	var buf strings.Builder
 	flags.SetOutput(&buf)
 	flags.Init("test", ContinueOnError)
 	flags.Parse([]string{"--unknown"})
@@ -910,7 +909,7 @@ func TestSetOutput(t *testing.T) {
 
 func TestOutput(t *testing.T) {
 	var flags FlagSet
-	var buf bytes.Buffer
+	var buf strings.Builder
 	expect := "an example string"
 	flags.SetOutput(&buf)
 	fmt.Fprint(flags.Output(), expect)
@@ -927,8 +926,8 @@ func TestOutputExitOnError(t *testing.T) {
 		t.Fatal("this error should not be triggered")
 		return
 	}
-	mockStdout := bytes.NewBufferString("")
-	mockStderr := bytes.NewBufferString("")
+	mockStdout := new(strings.Builder)
+	mockStderr := new(strings.Builder)
 	cmd := exec.Command(os.Args[0], "-test.run="+t.Name())
 	cmd.Env = append(os.Environ(), "PFLAG_CRASH_TEST=1")
 	cmd.Stdout = mockStdout
@@ -1161,7 +1160,7 @@ func getDeprecatedFlagSet() *FlagSet {
 func TestDeprecatedFlagInDocs(t *testing.T) {
 	f := getDeprecatedFlagSet()
 
-	out := new(bytes.Buffer)
+	out := new(strings.Builder)
 	f.SetOutput(out)
 	f.PrintDefaults()
 
@@ -1178,7 +1177,7 @@ func TestUnHiddenDeprecatedFlagInDocs(t *testing.T) {
 	}
 	flg.Hidden = false
 
-	out := new(bytes.Buffer)
+	out := new(strings.Builder)
 	f.SetOutput(out)
 	f.PrintDefaults()
 
@@ -1197,7 +1196,7 @@ func TestDeprecatedFlagShorthandInDocs(t *testing.T) {
 	f.BoolP(name, "n", true, "always true")
 	f.MarkShorthandDeprecated("noshorthandflag", fmt.Sprintf("use --%s instead", name))
 
-	out := new(bytes.Buffer)
+	out := new(strings.Builder)
 	f.SetOutput(out)
 	f.PrintDefaults()
 
@@ -1216,7 +1215,7 @@ func parseReturnStderr(t *testing.T, f *FlagSet, args []string) (string, error) 
 	outC := make(chan string)
 	// copy the output in a separate goroutine so printing can't block indefinitely
 	go func() {
-		var buf bytes.Buffer
+		var buf strings.Builder
 		io.Copy(&buf, r)
 		outC <- buf.String()
 	}()
@@ -1300,7 +1299,7 @@ func TestHiddenFlagInUsage(t *testing.T) {
 	f.Bool("secretFlag", true, "shhh")
 	f.MarkHidden("secretFlag")
 
-	out := new(bytes.Buffer)
+	out := new(strings.Builder)
 	f.SetOutput(out)
 	f.PrintDefaults()
 
@@ -1365,7 +1364,7 @@ func (cv *customValue) Type() string { return "custom" }
 
 func TestPrintDefaults(t *testing.T) {
 	fs := NewFlagSet("print defaults test", ContinueOnError)
-	var buf bytes.Buffer
+	var buf strings.Builder
 	fs.SetOutput(&buf)
 	fs.Bool("A", false, "for bootstrapping, allow 'any' type")
 	fs.Bool("Alongflagname", false, "disable bounds checking")
@@ -1447,7 +1446,7 @@ func TestVisitFlagOrder(t *testing.T) {
 
 func TestUnquoteUsage(t *testing.T) {
 
-	var buf bytes.Buffer
+	var buf strings.Builder
 	var fs = NewFlagSet(t.Name(), ContinueOnError)
 	fs.SetOutput(&buf)
 	want := "Usage of TestUnquoteUsage:\n"

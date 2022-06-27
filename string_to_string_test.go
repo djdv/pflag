@@ -4,7 +4,6 @@
 package pflag
 
 import (
-	"bytes"
 	"encoding/csv"
 	"fmt"
 	"strings"
@@ -29,7 +28,7 @@ func createS2SFlag(vals map[string]string) string {
 		records = append(records, k+"="+v)
 	}
 
-	var buf bytes.Buffer
+	var buf strings.Builder
 	w := csv.NewWriter(&buf)
 	if err := w.Write(records); err != nil {
 		panic(err)

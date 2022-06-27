@@ -4,7 +4,6 @@
 package pflag
 
 import (
-	"bytes"
 	"encoding/csv"
 	"fmt"
 	"strings"
@@ -70,7 +69,7 @@ func (s *stringToStringValue) String() string {
 		records = append(records, k+"="+v)
 	}
 
-	var buf bytes.Buffer
+	var buf strings.Builder
 	w := csv.NewWriter(&buf)
 	if err := w.Write(records); err != nil {
 		panic(err)
