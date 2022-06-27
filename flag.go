@@ -1148,10 +1148,6 @@ func (f *FlagSet) parseAll(arguments []string, fn parseFunc) error {
 	}
 	f.parsed = true
 
-	if len(arguments) < 0 {
-		return nil
-	}
-
 	f.args = make([]string, 0, len(arguments))
 
 	err := f.parseArgs(arguments, fn)
